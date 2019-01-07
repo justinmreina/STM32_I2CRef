@@ -11,7 +11,7 @@
 	  Device->STM32F0->Boards->NUCLEO-F091RC
 	  Runtime library->Library: 'Newlib standard'
 	  Create Project								[#3C5E]
-	  Compile										[#
+	  Compile										[#B39A]
 	  Deploy & Debug to Nucleo-F091RC				[#]
 	Open STM32CubeMX V1.0 							(Version 5.0.0)
 	  Access to Board Selector->Part Number Search: 'NUCLEO-F091RC'
