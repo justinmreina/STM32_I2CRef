@@ -55,6 +55,8 @@ GPIO_InitTypeDef  GPIO_InitStruct;
 I2C_HandleTypeDef hi2c2;
 UART_HandleTypeDef huart2;
 
+uint8_t tx_data[5] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
+
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 void MX_I2C2_Init(void);
@@ -103,9 +105,21 @@ int main(void)
   /* -3- Toggle IOs in an infinite loop */
   while (1)
   {
+   //Locals
+	HAL_StatusTypeDef result;
+
+	//Notice
     HAL_GPIO_TogglePin(LED2_GPIO_PORT, LED2_PIN);
-    /* Insert delay 100 ms */
-    HAL_Delay(100);
+
+    //Transmit
+    result = HAL_I2C_Master_Transmit(&hi2c2, 0xEE, tx_data, 1, 1000);
+
+    //Safety
+    if(result != HAL_OK) {
+    	asm(" nop");									/* Debug breakpoint			*/
+    }
+    //Loop Delay
+    HAL_Delay(100);										/* Insert delay 100 ms 		*/
   }
 }
 
