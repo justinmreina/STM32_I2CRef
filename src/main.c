@@ -11,6 +11,17 @@
 #include "main.h"
 
 /* Private typedef -----------------------------------------------------------*/
+//@todo 	field descriptions, header
+//@src 		Sec 26.7.5 Timing register (I2C_TIMINGR)
+typedef struct tgr_value {
+	uint8_t PRESC;
+	uint8_t SCLDEL;
+	uint8_t SDADEL;
+	uint8_t SCLH;
+	uint8_t SCLL;
+} TGR_Value;
+
+
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
@@ -24,7 +35,7 @@ uint8_t tx_data[5] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
 void SystemClock_Config(void);
 void MX_I2C2_Init(void);
 void Error_Handler(void);
-
+uint32_t I2C_GetTIMINGR(TGR_Value config);
 
 /**
   * @brief  Main program
@@ -158,6 +169,44 @@ void MX_I2C2_Init(void) {
   }
 
   return;
+}
+
+
+//@todo 	header
+//@todo 	validate and use
+//@ref		Sec. 26.7.5 Timing register (I2C_TIMINGR)
+uint32_t I2C_GetTIMINGR(TGR_Value config) {
+
+	//Locals
+	uint32_t reg_val;
+
+	//Init
+	reg_val = 0;
+
+	//Safety
+	config.PRESC  &= (0x0F);						/* b3:b0						*/
+	config.SCLDEL &= (0x0F);						/* b3:b0						*/
+	config.SDADEL &= (0x0F);						/* b3:b0						*/
+	config.PRESC  &= (0xFF);						/* all bits						*/
+	config.PRESC  &= (0xFF);						/* all bits						*/
+
+	//PRESC
+	reg_val |= (config.PRESC<<28);
+
+	//SCLDEL
+	reg_val |= (config.SCLDEL<<20);
+
+	//SDADEL
+	reg_val |= (config.SDADEL<<16);
+
+	//SCLH
+	reg_val |= (config.SCLH<<8);
+
+	//SCLL
+	reg_val |= (config.SCLL<<0);
+
+
+	return reg_val;
 }
 
 
