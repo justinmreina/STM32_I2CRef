@@ -23,6 +23,8 @@ typedef struct tgr_value {
 
 
 /* Private define ------------------------------------------------------------*/
+#define 	I2C_SLAVE_ADDRESS 		(0x18<<1)		/* b7:b1 aligned 		  */
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 GPIO_InitTypeDef  GPIO_InitStruct;
@@ -82,7 +84,7 @@ int main(void) {
     HAL_GPIO_TogglePin(LED2_GPIO_PORT, LED2_PIN);
 
     //Transmit
-    result = HAL_I2C_Master_Transmit(&hi2c2, 0xEE, tx_data, 1, 1000);
+    result = HAL_I2C_Master_Transmit(&hi2c2, I2C_SLAVE_ADDRESS, tx_data, 1, 1000);
 
     //Safety
     if(result != HAL_OK) {
