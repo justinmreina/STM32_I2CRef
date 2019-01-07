@@ -9,6 +9,7 @@
   ******************************************************************************
   */
 #include "main.h"
+#include <string.h>
 
 /* Private typedef -----------------------------------------------------------*/
 //@todo 	field descriptions, header
@@ -25,6 +26,10 @@ typedef struct tgr_value {
 /* Private define ------------------------------------------------------------*/
 #define 	I2C_SLAVE_ADDRESS 		(0x18<<1)		/* b7:b1 aligned 		  */
 
+//Demo Selection
+//#define WRITE_DEMO
+#define READ_DEMO
+
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 GPIO_InitTypeDef  GPIO_InitStruct;
@@ -32,6 +37,7 @@ I2C_HandleTypeDef hi2c2;
 UART_HandleTypeDef huart2;
 
 uint8_t tx_data[5] = {0xAA, 0xAA, 0xAA, 0xAA, 0xAA};
+uint8_t rx_data[5];
 
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
@@ -83,9 +89,17 @@ int main(void) {
 	//Notice
     HAL_GPIO_TogglePin(LED2_GPIO_PORT, LED2_PIN);
 
+#ifdef READ_DEMO
+    //Init
+    memset(rx_data, 0, sizeof(rx_data));				/* clear to '0' val			*/
+
+    //Transmit
+    result = HAL_I2C_Mem_Read(&hi2c2, I2C_SLAVE_ADDRESS, 0x0F, 1, rx_data, 1, 1000);
+
+#else /* WRITE_DEMO */
     //Transmit
     result = HAL_I2C_Master_Transmit(&hi2c2, I2C_SLAVE_ADDRESS, tx_data, 1, 1000);
-
+#endif
     //Safety
     if(result != HAL_OK) {
     	asm(" nop");									/* Debug breakpoint			*/
