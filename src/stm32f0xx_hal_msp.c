@@ -41,7 +41,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-#include "stm32f0xx_hal_uart.h"
 
 /* USER CODE BEGIN Includes */
 
